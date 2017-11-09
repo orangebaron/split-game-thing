@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const fps = 20
-const startSpeed = 200
+const startSpeed = 150
 const gameSize = new document.Vector(500, 800)
 var playing = false
 var score
