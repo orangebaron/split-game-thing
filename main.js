@@ -1,12 +1,14 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const fps = 20
-var speed = 75
+const startSpeed = 75
 const gameSize = new document.Vector(500, 800)
-var gameOver = false
+var playing = false
+var score
 
 var circlesList = []
 var linesList = []
+var speed
 
 function Circle (pos, radius, color) {
   this.pos = pos
@@ -84,22 +86,27 @@ Line.prototype = {
 }
 
 function randomCircle () {
-  if (gameOver) { return }
+  if (!playing) { return }
   circlesList.push(new Circle(new document.Vector(Math.random() * gameSize.x, 0), Math.random() * 20 + 50, '#FF0000'))
   setTimeout(randomCircle, 100000 / speed) // at 50 speed, new circle every 2 seconds
 }
 var intervals = []
 
 function gameLose () {
-  console.log('L')
-  gameOver = true
+  playing = false
   intervals.forEach(function (interval) {
     clearInterval(interval)
   })
+  document.getElementById('gameoverscore').innerHTML = Math.floor(score)
+  document.getElementById('playingwindow').style.visibility = 'hidden'
+  document.getElementById('gameoverwindow').style.visibility = 'visible'
 }
 
 var backgroundTint = '#00FF00'
 function turn () {
+  score += 10 / fps // each second adds 10 to the score
+  document.getElementById('score').innerHTML = Math.floor(score)
+
   ctx.fillStyle = backgroundTint
   ctx.fillRect(0, 0, gameSize.x, gameSize.y)
 
@@ -131,19 +138,24 @@ function turn () {
 }
 
 function init () {
+  document.getElementById('initialwindow').style.visibility = 'hidden'
+  document.getElementById('playingwindow').style.visibility = 'visible'
+  document.getElementById('gameoverwindow').style.visibility = 'hidden'
+  score = 0
+  speed = startSpeed
+  playing = true
   linesList.push(new Line(new document.Vector(gameSize.x / 2, gameSize.y), 0))
   linesList[0].pos = linesList[0].pos.add(new document.Vector(0, -50))
   intervals.push(setInterval(turn, 1000 / fps))
   intervals.push(setInterval(function () { speed++ }, 1000))
   randomCircle()
 }
-
-init()
+console.log(init) // to get rid of the goddamn "defined but never used" error
 
 var debounce = true
 document.addEventListener('keydown', function (key) {
   if (key.code === 'Space') {
-    if (debounce) {
+    if (debounce && playing) {
       debounce = false
       linesList.forEach(function (line) {
         line.split()

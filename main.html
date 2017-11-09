@@ -3,9 +3,31 @@
   <head>
     <title>mmm</title>
     <script src="vectors.js"></script>
+    <link href="main.css" type="text/css" rel="stylesheet" />
   </head>
   <body>
-    <canvas height="800" width="500" id="canvas"></canvas>
+    <canvas height="800" width="500" id="canvas" class="gamewindow"></canvas>
+    <div class="gamewindow background" id="initialwindow">
+      <div class="padded">
+        <p class="gametext center">[game name here]</p>
+        <p class="gametext center" style="font-size:30px">Press space to split. Don't hit the circles.</p>
+        <div class="buttonwrapper">
+          <button class="gametext center" onclick="init()">Start</button>
+        </div>
+      </div>
+    </div>
+    <div class="gamewindow invisible" id="playingwindow">
+      <p class="gametext right" id="score">0</p>
+    </div>
+    <div class="gamewindow background invisible" id="gameoverwindow">
+      <div class="padded">
+        <p class="gametext center red">Game Over!</p>
+        <p class="gametext center" id="gameoverscore">0</p>
+        <div class="buttonwrapper">
+          <button class="gametext center" onclick="init()">Play Again</button>
+        </div>
+      </div>
+    </div>
     <script src="main.js"></script>
   </body>
 </html>
