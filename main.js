@@ -1,10 +1,10 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
-const fps = 1
-var speed = 5
+const fps = 20
+var speed = 75
 const gameSize = new document.Vector(500, 800)
+var gameOver = false
 
-const speedVec = new document.Vector(0, speed / fps)
 var circlesList = []
 var linesList = []
 
@@ -16,7 +16,7 @@ function Circle (pos, radius, color) {
 Circle.prototype = {
   constructor: Circle,
   move: function () {
-    this.pos = this.pos.add(speedVec)
+    this.pos = new document.Vector(this.pos.x, this.pos.y + speed / fps)
   },
   shouldIDie: function () {
     return this.pos.y > this.radius + gameSize.y
@@ -29,28 +29,29 @@ Circle.prototype = {
   }
 }
 
-function Line (start, direction) {
+function Line (start, xDirection) {
   this.start = start
   this.pos = start
-  this.direction = direction
+  this.xDirection = xDirection
 }
 Line.prototype = {
   constructor: Line,
   active: true,
   move: function () {
-    console.log(this)
-    this.pos = this.pos.add(speedVec)
-    this.start = this.start.add(speedVec)
+    this.start = new document.Vector(this.start.x, this.start.y + speed / fps)
     if (this.active) {
-      this.pos = this.pos.add(this.direction)
+      this.pos = new document.Vector(this.pos.x + this.xDirection * speed / fps, this.pos.y)
+    } else {
+      this.pos = new document.Vector(this.pos.x, this.pos.y + speed / fps)
     }
   },
   shouldIDie: function () {
     if (this.active) {
-      var colliding = true
+      var colliding = false
+      var th = this
       circlesList.forEach(function (circle) {
-        if (this.pos.dist(circle.pos) < circle.radius) {
-          colliding = false
+        if (th.pos.dist(circle.pos) < circle.radius) {
+          colliding = true
         }
       })
       if (colliding || this.pos.x > gameSize.x || this.pos.x < 0) {
@@ -68,41 +69,56 @@ Line.prototype = {
     ctx.moveTo(this.start.x, this.start.y)
     ctx.lineTo(this.pos.x, this.pos.y)
     ctx.stroke()
+  },
+  split: function () {
+    if (this.active) {
+      if (this.xDirection === 0) {
+        this.active = false
+        linesList.push(new Line(this.pos, -1))
+        linesList.push(new Line(this.pos, 1))
+      } else {
+        linesList.push(new Line(this.pos, -this.xDirection))
+      }
+    }
   }
 }
 
 function randomCircle () {
-  circlesList.push(new Circle(new document.Vector(Math.random() * gameSize.x, 0), Math.random() * 20, '#FF0000'))
+  if (gameOver) { return }
+  circlesList.push(new Circle(new document.Vector(Math.random() * gameSize.x, 0), Math.random() * 20 + 50, '#FF0000'))
+  setTimeout(randomCircle, 100000 / speed) // at 50 speed, new circle every 2 seconds
 }
 var intervals = []
 
 function gameLose () {
-  window.alert('L')
+  console.log('L')
+  gameOver = true
   intervals.forEach(function (interval) {
     clearInterval(interval)
   })
 }
 
+var backgroundTint = '#00FF00'
 function turn () {
-  ctx.fillStyle = '#FFFFFF'
+  ctx.fillStyle = backgroundTint
   ctx.fillRect(0, 0, gameSize.x, gameSize.y)
 
   var i, obj
-  for (i = 0; i < circlesList.length; i++) {
-    obj = circlesList[i]
-    obj.move()
-    if (obj.shouldIDie()) {
-      circlesList.splice(i, 1)
-      i--
-    } else {
-      obj.render()
-    }
-  }
   for (i = 0; i < linesList.length; i++) {
     obj = linesList[i]
     obj.move()
     if (obj.shouldIDie()) {
       linesList.splice(i, 1)
+      i--
+    } else {
+      obj.render()
+    }
+  }
+  for (i = 0; i < circlesList.length; i++) {
+    obj = circlesList[i]
+    obj.move()
+    if (obj.shouldIDie()) {
+      circlesList.splice(i, 1)
       i--
     } else {
       obj.render()
@@ -115,10 +131,25 @@ function turn () {
 }
 
 function init () {
-  linesList.push(new Line(new document.Vector(gameSize.x / 2, gameSize.y), new document.Vector(0, -10)))
-  linesList[0].pos += linesList[0].direction * 3
-  intervals.push(setInterval(randomCircle, 2000))
+  linesList.push(new Line(new document.Vector(gameSize.x / 2, gameSize.y), 0))
+  linesList[0].pos = linesList[0].pos.add(new document.Vector(0, -50))
   intervals.push(setInterval(turn, 1000 / fps))
+  intervals.push(setInterval(function () { speed++ }, 1000))
+  randomCircle()
 }
 
 init()
+
+var debounce = true
+document.addEventListener('keydown', function (key) {
+  if (key.code === 'Space') {
+    if (debounce) {
+      debounce = false
+      linesList.forEach(function (line) {
+        line.split()
+      })
+      backgroundTint = '#FF9900'
+      setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, 50000 / speed)
+    }
+  }
+})

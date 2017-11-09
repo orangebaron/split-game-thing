@@ -14,20 +14,20 @@ Vector.prototype = {
   },
   mult: function (v) {
     if (v instanceof Vector) {
-      return Vector(this.x * v.x, this.y * v.y)
+      return new Vector(this.x * v.x, this.y * v.y)
     } else {
-      return Vector(this.x * v, this.y * v)
+      return new Vector(this.x * v, this.y * v)
     }
   },
   div: function (v) {
     if (v instanceof Vector) {
-      return Vector(this.x / v.x, this.y / v.y)
+      return new Vector(this.x / v.x, this.y / v.y)
     } else {
-      return Vector(this.x / v, this.y / v)
+      return new Vector(this.x / v, this.y / v)
     }
   },
   dot: function (v) {
-    console.assert(v.instanceOf(Vector))
+    console.assert(v instanceof Vector)
     return (this.x * v.x) + (this.y * v.y)
   },
   length: function () {
@@ -36,9 +36,9 @@ Vector.prototype = {
   normal: function () {
     return this.div(this.length)
   },
-  distance: function (v) {
-    console.assert(v.instanceOf(Vector))
-    return (this - v).size
+  dist: function (v) {
+    console.assert(v instanceof Vector)
+    return (this.sub(v)).length()
   }
 }
 document.Vector = Vector
