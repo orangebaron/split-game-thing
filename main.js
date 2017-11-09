@@ -167,7 +167,7 @@ function buttonPress () {
       line.split()
     })
     backgroundTint = '#FF9900'
-    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, numActive * 20000 / speed)
+    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, Math.pow(1.2, numActive) * 20000 / speed)
   }
 }
 document.addEventListener('keydown', function (key) {
