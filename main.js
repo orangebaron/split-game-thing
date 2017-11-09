@@ -172,3 +172,9 @@ document.addEventListener('keydown', function (key) {
   }
 })
 document.addEventListener('touchstart', buttonPress)
+
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+  document.getElementById('instructions').innerHTML = 'Touch to split. Don\'t hit the circles.'
+} else {
+  document.getElementById('instructions').innerHTML = 'Press space to split. Don\'t hit the circles.'
+}
