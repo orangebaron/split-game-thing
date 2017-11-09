@@ -159,11 +159,15 @@ var debounce = true
 function buttonPress () {
   if (debounce && playing) {
     debounce = false
+    var numActive = 0
     linesList.forEach(function (line) {
+      if (line.active) {
+        numActive++
+      }
       line.split()
     })
     backgroundTint = '#FF9900'
-    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, 50000 / speed)
+    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, numActive * 20000 / speed)
   }
 }
 document.addEventListener('keydown', function (key) {
