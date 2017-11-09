@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const fps = 20
-const startSpeed = 100
+const startSpeed = 130
 const gameSize = new document.Vector(500, 800)
 var playing = false
 var score
@@ -167,7 +167,7 @@ function buttonPress () {
       line.split()
     })
     backgroundTint = '#FF9900'
-    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, Math.pow(1.2, numActive) * 35000 / speed)
+    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, Math.pow(1.2, numActive) * 45000 / speed)
   }
 }
 document.addEventListener('keydown', function (key) {
