@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
 const fps = 20
-const startSpeed = 75
+const startSpeed = 100
 const gameSize = new document.Vector(500, 800)
 var playing = false
 var score
@@ -150,7 +150,7 @@ function init () {
   linesList.push(new Line(new document.Vector(gameSize.x / 2, gameSize.y), 0))
   linesList[0].pos = linesList[0].pos.add(new document.Vector(0, -50))
   intervals.push(setInterval(turn, 1000 / fps))
-  intervals.push(setInterval(function () { speed++ }, 1000))
+  intervals.push(setInterval(function () { speed += 2 }, 1000))
   randomCircle()
 }
 console.log(init) // to get rid of the goddamn "defined but never used" error
@@ -167,7 +167,7 @@ function buttonPress () {
       line.split()
     })
     backgroundTint = '#FF9900'
-    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, Math.pow(1.2, numActive) * 20000 / speed)
+    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, Math.pow(1.2, numActive) * 35000 / speed)
   }
 }
 document.addEventListener('keydown', function (key) {
