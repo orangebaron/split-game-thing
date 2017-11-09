@@ -156,15 +156,19 @@ function init () {
 console.log(init) // to get rid of the goddamn "defined but never used" error
 
 var debounce = true
+function buttonPress () {
+  if (debounce && playing) {
+    debounce = false
+    linesList.forEach(function (line) {
+      line.split()
+    })
+    backgroundTint = '#FF9900'
+    setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, 50000 / speed)
+  }
+}
 document.addEventListener('keydown', function (key) {
   if (key.code === 'Space') {
-    if (debounce && playing) {
-      debounce = false
-      linesList.forEach(function (line) {
-        line.split()
-      })
-      backgroundTint = '#FF9900'
-      setTimeout(function () { debounce = true; backgroundTint = '#00FF00' }, 50000 / speed)
-    }
+    buttonPress()
   }
 })
+document.addEventListener('touchstart', buttonPress)
