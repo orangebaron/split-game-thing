@@ -6,8 +6,8 @@ const gameSize = new document.Vector(500, 800)
 var playing = false
 var score
 
-var circlesList = []
-var linesList = []
+var circlesList
+var linesList
 var speed
 
 function Circle (pos, radius, color) {
@@ -97,6 +97,7 @@ function gameLose () {
   intervals.forEach(function (interval) {
     clearInterval(interval)
   })
+  intervals = []
   document.getElementById('gameoverscore').innerHTML = Math.floor(score)
   document.getElementById('playingwindow').style.visibility = 'hidden'
   document.getElementById('gameoverwindow').style.visibility = 'visible'
@@ -144,6 +145,8 @@ function init () {
   score = 0
   speed = startSpeed
   playing = true
+  circlesList = []
+  linesList = []
   linesList.push(new Line(new document.Vector(gameSize.x / 2, gameSize.y), 0))
   linesList[0].pos = linesList[0].pos.add(new document.Vector(0, -50))
   intervals.push(setInterval(turn, 1000 / fps))
