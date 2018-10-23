@@ -11,6 +11,7 @@ var linesList
 var speed
 
 function Circle (pos, radius, color) {
+  //Init
   this.pos = pos
   this.radius = radius
   this.color = color
