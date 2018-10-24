@@ -1,6 +1,6 @@
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
-const fps = 20
+const fps = 60
 const startSpeed = 150
 const gameSize = new document.Vector(500, 800)
 var playing = false
@@ -67,6 +67,7 @@ Line.prototype = {
   render: function () {
     ctx.strokeStyle = '#000000'
     ctx.lineWidth = 10
+    ctx.shape = "square"
     ctx.beginPath()
     ctx.moveTo(this.start.x, this.start.y)
     ctx.lineTo(this.pos.x, this.pos.y)
